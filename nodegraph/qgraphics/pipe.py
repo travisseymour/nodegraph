@@ -2,6 +2,8 @@
 import math
 
 from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtGui import QPainter
+from PySide6.QtWidgets import QGraphicsItem
 
 from nodegraph.constants import (
     PIPE_DEFAULT_COLOR, PIPE_ACTIVE_COLOR,
@@ -16,9 +18,9 @@ from nodegraph.constants import (
 from nodegraph.qgraphics.port import PortItem
 
 PIPE_STYLES = {
-    PIPE_STYLE_DEFAULT: QtCore.Qt.SolidLine,
-    PIPE_STYLE_DASHED: QtCore.Qt.DashLine,
-    PIPE_STYLE_DOTTED: QtCore.Qt.DotLine
+    PIPE_STYLE_DEFAULT: QtCore.Qt.PenStyle.SolidLine,
+    PIPE_STYLE_DASHED: QtCore.Qt.PenStyle.DashLine,
+    PIPE_STYLE_DOTTED: QtCore.Qt.PenStyle.DotLine
 }
 
 
@@ -31,7 +33,7 @@ class PipeItem(QtWidgets.QGraphicsPathItem):
         super(PipeItem, self).__init__()
         self.setZValue(Z_VAL_PIPE)
         self.setAcceptHoverEvents(True)
-        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
+        self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
         self._color = PIPE_DEFAULT_COLOR
         self._style = PIPE_STYLE_DEFAULT
         self._active = False
@@ -79,7 +81,7 @@ class PipeItem(QtWidgets.QGraphicsPathItem):
         pen_width = PIPE_WIDTH
         if self._active:
             color = QtGui.QColor(*PIPE_ACTIVE_COLOR)
-            if pen_style == QtCore.Qt.DashDotDotLine:
+            if pen_style == QtCore.Qt.PenStyle.DashDotDotLine:
                 pen_width += 1
             else:
                 pen_width += 0.35
@@ -94,12 +96,12 @@ class PipeItem(QtWidgets.QGraphicsPathItem):
             pen_style = PIPE_STYLES.get(PIPE_STYLE_DOTTED)
 
         pen = QtGui.QPen(color, pen_width, pen_style)
-        pen.setCapStyle(QtCore.Qt.RoundCap)
-        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
+        pen.setJoinStyle(QtCore.Qt.PenJoinStyle.MiterJoin)
 
         painter.save()
         painter.setPen(pen)
-        painter.setRenderHint(painter.Antialiasing, True)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         painter.drawPath(self.path())
 
         # draw arrow
@@ -127,8 +129,8 @@ class PipeItem(QtWidgets.QGraphicsPathItem):
                 pen_width *= (1.0 + dist)
 
             pen = QtGui.QPen(color, pen_width)
-            pen.setCapStyle(QtCore.Qt.RoundCap)
-            pen.setJoinStyle(QtCore.Qt.MiterJoin)
+            pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
+            pen.setJoinStyle(QtCore.Qt.PenJoinStyle.MiterJoin)
             painter.setPen(pen)
 
             transform = QtGui.QTransform()
@@ -339,7 +341,7 @@ class PipeItem(QtWidgets.QGraphicsPathItem):
         return False
 
     def itemChange(self, change, value):
-        if change == self.ItemSelectedChange and self.scene():
+        if change == QGraphicsItem.GraphicsItemChange.ItemSelectedChange and self.scene():
             self.reset()
             if value:
                 self.highlight()
@@ -415,11 +417,11 @@ class LivePipeItem(PipeItem):
 
         pen = QtGui.QPen(color, pen_width)
         pen.setStyle(pen_style)
-        pen.setCapStyle(QtCore.Qt.RoundCap)
+        pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
 
         painter.save()
         painter.setPen(pen)
-        painter.setRenderHint(painter.Antialiasing, True)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         painter.drawPath(self.path())
 
         cen_x = self.path().pointAtPercent(0.5).x()

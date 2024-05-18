@@ -2,6 +2,7 @@
 from collections import OrderedDict
 
 from PySide6 import QtGui, QtCore, QtWidgets
+from PySide6.QtWidgets import QGraphicsItem
 
 from nodegraph.constants import (IN_PORT, OUT_PORT,
                                    NODE_WIDTH, NODE_HEIGHT,
@@ -36,7 +37,7 @@ class NodeItem(AbstractNodeItem):
         pixmap = icon.pixmap(QtCore.QSize(NODE_ICON_SIZE, NODE_ICON_SIZE), 9.0)
         self._properties['icon'] = ICON_NODE_BASE
         self._icon_item = QtWidgets.QGraphicsPixmapItem(pixmap, self)
-        self._icon_item.setTransformationMode(QtCore.Qt.SmoothTransformation)
+        self._icon_item.setTransformationMode(QtCore.Qt.TransformationMode.SmoothTransformation)
         self._text_item = NodeTextItem(self.name, self)
         self._x_item = XDisabledItem(self, 'DISABLED')
         self._input_items = OrderedDict()
@@ -58,8 +59,8 @@ class NodeItem(AbstractNodeItem):
         self.auto_switch_mode()
 
         painter.save()
-        painter.setPen(QtCore.Qt.NoPen)
-        painter.setBrush(QtCore.Qt.NoBrush)
+        painter.setPen(QtCore.Qt.PenStyle.NoPen)
+        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
 
         # base background.
         margin = 0.9
@@ -108,7 +109,7 @@ class NodeItem(AbstractNodeItem):
         pen.setCosmetic(self.viewer().get_zoom() < 0.0)
         path = QtGui.QPainterPath()
         path.addRoundedRect(border_rect, radius, radius)
-        painter.setBrush(QtCore.Qt.NoBrush)
+        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
         painter.setPen(pen)
         painter.drawPath(path)
 
@@ -121,7 +122,7 @@ class NodeItem(AbstractNodeItem):
         Args:
             event (QtWidgets.QGraphicsSceneMouseEvent): mouse event.
         """
-        if event.button() == QtCore.Qt.LeftButton:
+        if event.button() == QtCore.Qt.MouseButton.LeftButton:
             for p in self._input_items.keys():
                 if p.hovered:
                     event.ignore()
@@ -139,7 +140,7 @@ class NodeItem(AbstractNodeItem):
         Args:
             event (QtWidgets.QGraphicsSceneMouseEvent): mouse event.
         """
-        if event.modifiers() == QtCore.Qt.AltModifier:
+        if event.modifiers() == QtCore.Qt.KeyboardModifier.AltModifier:
             event.ignore()
             return
         super(NodeItem, self).mouseReleaseEvent(event)
@@ -151,7 +152,7 @@ class NodeItem(AbstractNodeItem):
         Args:
             event (QtWidgets.QGraphicsSceneMouseEvent): mouse event.
         """
-        if event.button() == QtCore.Qt.LeftButton:
+        if event.button() == QtCore.Qt.MouseButton.LeftButton:
 
             # enable text item edit mode.
             items = self.scene().items(event.scenePos())
@@ -174,7 +175,7 @@ class NodeItem(AbstractNodeItem):
             change:
             value:
         """
-        if change == self.ItemSelectedChange and self.scene():
+        if change == QGraphicsItem.GraphicsItemChange.ItemSelectedChange and self.scene():
             self.reset_pipes()
             if value:
                 self.highlight_pipes()
@@ -474,7 +475,7 @@ class NodeItem(AbstractNodeItem):
         Decide whether to draw the node with proxy mode.
         (this is called at the start in the "self.paint()" function.)
         """
-        if ITEM_CACHE_MODE is QtWidgets.QGraphicsItem.ItemCoordinateCache:
+        if ITEM_CACHE_MODE is QtWidgets.QGraphicsItem.CacheMode.ItemCoordinateCache:
             return
 
         rect = self.sceneBoundingRect()
@@ -803,8 +804,8 @@ class NodeItemVertical(NodeItem):
         self.auto_switch_mode()
 
         painter.save()
-        painter.setPen(QtCore.Qt.NoPen)
-        painter.setBrush(QtCore.Qt.NoBrush)
+        painter.setPen(QtCore.Qt.PenStyle.NoPen)
+        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
 
         # base background.
         margin = 1.0
@@ -846,7 +847,7 @@ class NodeItemVertical(NodeItem):
 
         pen = QtGui.QPen(border_color, border_width)
         pen.setCosmetic(self.viewer().get_zoom() < 0.0)
-        painter.setBrush(QtCore.Qt.NoBrush)
+        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
         painter.setPen(pen)
         painter.drawRoundedRect(border_rect, radius, radius)
 

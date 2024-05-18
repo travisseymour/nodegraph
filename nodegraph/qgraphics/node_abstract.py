@@ -1,5 +1,6 @@
 
 from PySide6 import QtCore, QtWidgets
+from PySide6.QtWidgets import QGraphicsItem
 
 from nodegraph.constants import (Z_VAL_NODE,
                                    NODE_WIDTH,
@@ -14,7 +15,7 @@ class AbstractNodeItem(QtWidgets.QGraphicsItem):
 
     def __init__(self, name='node', parent=None):
         super(AbstractNodeItem, self).__init__(parent)
-        self.setFlags(self.ItemIsSelectable | self.ItemIsMovable)
+        self.setFlags(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable | QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         self.setCacheMode(ITEM_CACHE_MODE)
         self.setZValue(Z_VAL_NODE)
         self._properties = {

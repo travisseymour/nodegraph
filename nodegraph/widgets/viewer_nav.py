@@ -32,14 +32,14 @@ class NodeNavigationDelagate(QtWidgets.QStyledItemDelegate):
         )
 
         painter.save()
-        painter.setPen(QtCore.Qt.NoPen)
-        painter.setBrush(QtCore.Qt.NoBrush)
-        painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
+        painter.setPen(QtCore.Qt.PenStyle.NoPen)
+        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
+        painter.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing, True)
 
         # background.
         bg_color = QtGui.QColor(*VIEWER_NAV_ITEM_COLOR)
         itm_color = QtGui.QColor(80, 128, 123)
-        if option.state & QtWidgets.QStyle.State_Selected:
+        if option.state & QtWidgets.QStyle.StateFlag.State_Selected:
             bg_color = bg_color.lighter(120)
             itm_color = QtGui.QColor(*NODE_SEL_BORDER_COLOR)
 
@@ -75,7 +75,7 @@ class NodeNavigationDelagate(QtWidgets.QStyledItemDelegate):
         # text
         pen_color = option.palette.text().color()
         pen = QtGui.QPen(pen_color, 0.5)
-        pen.setCapStyle(QtCore.Qt.RoundCap)
+        pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
         painter.setPen(pen)
 
         font = painter.font()

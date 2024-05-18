@@ -38,8 +38,8 @@ class PortOutputNodeItem(NodeItem):
         self.auto_switch_mode()
 
         painter.save()
-        painter.setBrush(QtCore.Qt.NoBrush)
-        painter.setPen(QtCore.Qt.NoPen)
+        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
+        painter.setPen(QtCore.Qt.PenStyle.NoPen)
 
         margin = 2.0
         rect = self.boundingRect()
@@ -80,7 +80,7 @@ class PortOutputNodeItem(NodeItem):
             pen = QtGui.QPen(QtGui.QColor(*self.border_color), 1.2)
             painter.setBrush(QtGui.QColor(0, 0, 0, 50))
 
-        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        pen.setJoinStyle(QtCore.Qt.PenJoinStyle.MiterJoin)
         painter.setPen(pen)
         painter.drawPolygon(poly)
 
@@ -193,8 +193,8 @@ class PortOutputNodeVerticalItem(PortOutputNodeItem):
         self.auto_switch_mode()
 
         painter.save()
-        painter.setBrush(QtCore.Qt.NoBrush)
-        painter.setPen(QtCore.Qt.NoPen)
+        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
+        painter.setPen(QtCore.Qt.PenStyle.NoPen)
 
         margin = 2.0
         rect = self.boundingRect()
@@ -235,7 +235,7 @@ class PortOutputNodeVerticalItem(PortOutputNodeItem):
             pen = QtGui.QPen(QtGui.QColor(*self.border_color), 1.2)
             painter.setBrush(QtGui.QColor(0, 0, 0, 50))
 
-        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        pen.setJoinStyle(QtCore.Qt.PenJoinStyle.MiterJoin)
         painter.setPen(pen)
         painter.drawPolygon(poly)
 

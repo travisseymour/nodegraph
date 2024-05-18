@@ -1,6 +1,6 @@
-
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import os
-import sys
 import signal
 
 from PySide6 import QtCore, QtWidgets
@@ -13,28 +13,29 @@ from nodegraph import (
 )
 
 # import example nodes from the "example_nodes" package
+from custom_nodes import basic_nodes, custom_ports_node, widget_nodes
 from examples import group_node
-from examples.custom_nodes import (
-    basic_nodes,
-    custom_ports_node,
-    widget_nodes,
-)
 
 if __name__ == '__main__':
+
     # handle SIGINT to make the app terminate on CTRL+C
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     # QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
-    app = QtWidgets.QApplication(sys.argv)
+    app = QtWidgets.QApplication([])
 
     # create graph controller.
     graph = NodeGraph()
+
+    # set up context menu for the node graph.
+    # graph.set_context_menu_from_file(os.path.join(os.path.abspath(__file__), 'hotkeys', 'hotkeys.json'))
 
     # registered example nodes.
     graph.register_nodes([
         basic_nodes.BasicNodeA,
         basic_nodes.BasicNodeB,
+        # basic_nodes.CircleNode,
         custom_ports_node.CustomPortsNode,
         group_node.MyGroupNode,
         widget_nodes.DropdownMenuNode,
@@ -55,9 +56,9 @@ if __name__ == '__main__':
     # create node and set a custom icon.
     n_basic_b = graph.create_node(
         'nodes.basic.BasicNodeB', name='custom icon')
-    this_path = os.path.dirname(os.path.abspath(__file__))
-    icon = os.path.join(this_path, 'examples', 'star.png')
-    n_basic_b.set_icon(icon)
+    n_basic_b.set_icon(
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), 'star.png')
+    )
 
     # create node with the custom port shapes.
     n_custom_ports = graph.create_node(
@@ -74,6 +75,10 @@ if __name__ == '__main__':
     # create node with the QComboBox widget.
     n_combo_menu = graph.create_node(
         'nodes.widget.DropdownMenuNode', name='combobox node')
+
+    # crete node with the circular design.
+    # n_circle = graph.create_node(
+    #     'nodes.basic.CircleNode', name='circle node')
 
     # create group node.
     n_group = graph.create_node('nodes.group.MyGroupNode')
@@ -100,10 +105,11 @@ if __name__ == '__main__':
     n_backdrop = graph.create_node('Backdrop')
     n_backdrop.wrap_nodes([n_custom_ports, n_combo_menu])
 
-    # fit node selection to the viewer.
+    # fit nodes to the viewer.
+    graph.clear_selection()
     graph.fit_to_selection()
 
-    # Custom builtin widgets from nodegraph
+    # Custom builtin widgets from NodeGraphQt
     # ---------------------------------------
 
     # create a node properties bin widget.
@@ -120,7 +126,7 @@ if __name__ == '__main__':
 
     # create a nodes tree widget.
     nodes_tree = NodesTreeWidget(node_graph=graph)
-    nodes_tree.set_category_label('nodegraph.nodes', 'Builtin Nodes')
+    nodes_tree.set_category_label('nodeGraphQt.nodes', 'Builtin Nodes')
     nodes_tree.set_category_label('nodes.custom.ports', 'Custom Port Nodes')
     nodes_tree.set_category_label('nodes.widget', 'Widget Nodes')
     nodes_tree.set_category_label('nodes.basic', 'Basic Nodes')
@@ -129,11 +135,11 @@ if __name__ == '__main__':
 
     # create a node palette widget.
     nodes_palette = NodesPaletteWidget(node_graph=graph)
-    nodes_palette.set_category_label('nodegraph.nodes', 'Builtin Nodes')
+    nodes_palette.set_category_label('nodeGraphQt.nodes', 'Builtin Nodes')
     nodes_palette.set_category_label('nodes.custom.ports', 'Custom Port Nodes')
     nodes_palette.set_category_label('nodes.widget', 'Widget Nodes')
     nodes_palette.set_category_label('nodes.basic', 'Basic Nodes')
     nodes_palette.set_category_label('nodes.group', 'Group Nodes')
     # nodes_palette.show()
 
-    sys.exit(app.exec())
+    app.exec()

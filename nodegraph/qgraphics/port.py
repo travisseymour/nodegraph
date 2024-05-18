@@ -1,5 +1,6 @@
 
 from PySide6 import QtGui, QtCore, QtWidgets
+from PySide6.QtWidgets import QGraphicsItem
 
 from nodegraph.constants import (
     IN_PORT, OUT_PORT,
@@ -24,8 +25,8 @@ class PortItem(QtWidgets.QGraphicsItem):
         super(PortItem, self).__init__(parent)
         self.setAcceptHoverEvents(True)
         self.setCacheMode(ITEM_CACHE_MODE)
-        self.setFlag(self.ItemIsSelectable, False)
-        self.setFlag(self.ItemSendsScenePositionChanges, True)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, False)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemSendsScenePositionChanges, True)
         self.setZValue(Z_VAL_PORT)
         self._pipes = []
         self._width = PORT_DEFAULT_SIZE
@@ -64,7 +65,7 @@ class PortItem(QtWidgets.QGraphicsItem):
         #  display falloff collision for debugging
         # ----------------------------------------------------------------------
         # pen = QtGui.QPen(QtGui.QColor(255, 255, 255, 80), 0.8)
-        # pen.setStyle(QtCore.Qt.DotLine)
+        # pen.setStyle(QtCore.Qt.PenStyle.DotLine)
         # painter.setPen(pen)
         # painter.drawRect(self.boundingRect())
         # ----------------------------------------------------------------------
@@ -120,7 +121,7 @@ class PortItem(QtWidgets.QGraphicsItem):
         painter.restore()
 
     def itemChange(self, change, value):
-        if change == self.ItemScenePositionHasChanged:
+        if change == QGraphicsItem.GraphicsItemChange.ItemScenePositionHasChanged:
             self.redraw_connected_pipes()
         return super(PortItem, self).itemChange(change, value)
 

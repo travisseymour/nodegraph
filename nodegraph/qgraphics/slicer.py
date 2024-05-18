@@ -2,6 +2,7 @@
 import math
 
 from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtGui import QPainter
 
 from nodegraph.constants import Z_VAL_NODE_WIDGET, PIPE_SLICER_COLOR
 
@@ -33,7 +34,7 @@ class SlicerPipeItem(QtWidgets.QGraphicsPathItem):
         arrow_size = 4.0
 
         painter.save()
-        painter.setRenderHint(painter.Antialiasing, True)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
 
         font = painter.font()
         font.setPointSize(12)
@@ -44,15 +45,15 @@ class SlicerPipeItem(QtWidgets.QGraphicsPathItem):
         text_pos = QtCore.QPointF(p1.x() - text_x, p1.y() - text_y)
         text_color = QtGui.QColor(*PIPE_SLICER_COLOR)
         text_color.setAlpha(80)
-        painter.setPen(QtGui.QPen(text_color, 1.5, QtCore.Qt.SolidLine))
+        painter.setPen(QtGui.QPen(text_color, 1.5, QtCore.Qt.PenStyle.SolidLine))
         painter.drawText(text_pos, text)
 
-        painter.setPen(QtGui.QPen(color, 1.5, QtCore.Qt.DashDotLine))
+        painter.setPen(QtGui.QPen(color, 1.5, QtCore.Qt.PenStyle.DashDotLine))
         painter.drawPath(self.path())
 
-        pen = QtGui.QPen(color, 1.5, QtCore.Qt.SolidLine)
-        pen.setCapStyle(QtCore.Qt.RoundCap)
-        pen.setJoinStyle(QtCore.Qt.MiterJoin)
+        pen = QtGui.QPen(color, 1.5, QtCore.Qt.PenStyle.SolidLine)
+        pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
+        pen.setJoinStyle(QtCore.Qt.PenJoinStyle.MiterJoin)
         painter.setPen(pen)
         painter.setBrush(color)
 

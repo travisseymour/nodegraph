@@ -14,9 +14,9 @@ def build_context_menu(graph):
     # --------------------------------------------------------------------------
     file_menu = graph_menu.add_menu('&File')
 
-    file_menu.add_command('Open...', _open_session, QtGui.QKeySequence.Open)
+    file_menu.add_command('Open...', _open_session, QtGui.QKeySequence.StandardKey.Open)
     file_menu.add_command('Import...', _import_session)
-    file_menu.add_command('Save...', _save_session, QtGui.QKeySequence.Save)
+    file_menu.add_command('Save...', _save_session, QtGui.QKeySequence.StandardKey.Save)
     file_menu.add_command('Save As...', _save_session_as, 'Ctrl+Shift+S')
     file_menu.add_command('New Session', _new_session)
 
@@ -29,10 +29,10 @@ def build_context_menu(graph):
     edit_menu.add_command('Show Undo History', _show_undo_view)
     edit_menu.add_separator()
 
-    edit_menu.add_command('Copy', _copy_nodes, QtGui.QKeySequence.Copy)
-    edit_menu.add_command('Cut', _cut_nodes, QtGui.QKeySequence.Cut)
-    edit_menu.add_command('Paste', _paste_nodes, QtGui.QKeySequence.Paste)
-    edit_menu.add_command('Delete', _delete_nodes, QtGui.QKeySequence.Delete)
+    edit_menu.add_command('Copy', _copy_nodes, QtGui.QKeySequence.StandardKey.Copy)
+    edit_menu.add_command('Cut', _cut_nodes, QtGui.QKeySequence.StandardKey.Cut)
+    edit_menu.add_command('Paste', _paste_nodes, QtGui.QKeySequence.StandardKey.Paste)
+    edit_menu.add_command('Delete', _delete_nodes, QtGui.QKeySequence.StandardKey.Delete)
 
     edit_menu.add_separator()
 
@@ -70,7 +70,7 @@ def build_context_menu(graph):
     node_menu.add_separator()
     node_menu.add_command(
         'Expand Group Node', _expand_group_node,
-        QtGui.QKeySequence(QtCore.Qt.ALT + QtCore.Qt.Key_Return))
+        QtGui.QKeySequence(QtCore.Qt.ALT | QtCore.Qt.Key.Key_Return))
 
     # "Pipe" menu.
     # --------------------------------------------------------------------------

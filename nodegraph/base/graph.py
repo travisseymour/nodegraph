@@ -5,6 +5,7 @@ import os
 import re
 
 from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6.QtWidgets import QTabBar
 
 from nodegraph.base.commands import (NodeAddedCmd,
                                        NodeRemovedCmd,
@@ -167,7 +168,7 @@ class NodeGraph(QtCore.QObject):
         #       "graph_actions.py" module.
         # hard coded tab search.
         tab = QtGui.QShortcut(
-            QtGui.QKeySequence(QtCore.Qt.Key_Tab), self._viewer)
+            QtGui.QKeySequence(QtCore.Qt.Key.Key_Tab), self._viewer)
         tab.activated.connect(self._toggle_tab_search)
         self._viewer.show_tab_search.connect(self._toggle_tab_search)
 
@@ -451,7 +452,7 @@ class NodeGraph(QtCore.QObject):
             self._widget.addTab(self._viewer, 'Node Graph')
             # hide the close button on the first tab.
             tab_bar = self._widget.tabBar()
-            for btn_flag in [tab_bar.RightSide, tab_bar.LeftSide]:
+            for btn_flag in [tab_bar.ButtonPosition.RightSide, tab_bar.ButtonPosition.LeftSide]:
                 tab_btn = tab_bar.tabButton(0, btn_flag)
                 if tab_btn:
                     tab_btn.deleteLater()
@@ -1302,8 +1303,12 @@ class NodeGraph(QtCore.QObject):
                 # set custom properties.
                 for prop, val in n_data.get('custom', {}).items():
                     node.model.set_property(prop, val)
-                    if prop in node.view.widgets:
-                        node.view.widgets[prop].set_value(val)
+                    try:
+                        if prop in node.view.widgets:
+                            node.view.widgets[prop].set_value(val)
+                    except AttributeError as e:
+                        print(f'Warning: Unable to deserialize {prop}: "{e}"')
+
 
                 nodes[n_id] = node
                 self.add_node(node, n_data.get('pos'))

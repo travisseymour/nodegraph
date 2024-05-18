@@ -55,7 +55,7 @@ class NodeViewer(QtWidgets.QGraphicsView):
         super(NodeViewer, self).__init__(parent)
 
         self.setScene(NodeScene(self))
-        self.setRenderHint(QtGui.QPainter.Antialiasing, True)
+        self.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing, True)
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
@@ -330,9 +330,9 @@ class NodeViewer(QtWidgets.QGraphicsView):
         return super(NodeViewer, self).contextMenuEvent(event)
 
     def mousePressEvent(self, event):
-        if event.button() == QtCore.Qt.LeftButton:
+        if event.button() == QtCore.Qt.MouseButton.LeftButton:
             self.LMB_state = True
-        elif event.button() == QtCore.Qt.RightButton:
+        elif event.button() == QtCore.Qt.MouseButton.RightButton:
             self.RMB_state = True
         elif event.button() == QtCore.Qt.MiddleButton:
             self.MMB_state = True
@@ -397,9 +397,9 @@ class NodeViewer(QtWidgets.QGraphicsView):
             super(NodeViewer, self).mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
-        if event.button() == QtCore.Qt.LeftButton:
+        if event.button() == QtCore.Qt.MouseButton.LeftButton:
             self.LMB_state = False
-        elif event.button() == QtCore.Qt.RightButton:
+        elif event.button() == QtCore.Qt.MouseButton.RightButton:
             self.RMB_state = False
         elif event.button() == QtCore.Qt.MiddleButton:
             self.MMB_state = False
@@ -691,7 +691,7 @@ class NodeViewer(QtWidgets.QGraphicsView):
                 self._node_positions[n] = n.xy_pos
 
             # emit selected node id with LMB.
-            if event.button() == QtCore.Qt.LeftButton:
+            if event.button() == QtCore.Qt.MouseButton.LeftButton:
                 self.node_selected.emit(node.id)
 
             if not isinstance(node, BackdropNodeItem):

@@ -2,6 +2,7 @@
 from collections import defaultdict
 
 from PySide6 import QtWidgets, QtCore, QtGui
+from PySide6.QtWidgets import QSpinBox
 
 from nodegraph.constants import (NODE_PROP_QLABEL,
                                    NODE_PROP_QLINEEDIT,
@@ -47,8 +48,8 @@ class PropColorPicker(BaseProperty):
         self._vector.value_changed.connect(self._on_vector_changed)
         layout = QtWidgets.QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(self._button, 0, QtCore.Qt.AlignLeft)
-        layout.addWidget(self._vector, 1, QtCore.Qt.AlignLeft)
+        layout.addWidget(self._button, 0, QtCore.Qt.AlignmentFlag.AlignLeft)
+        layout.addWidget(self._vector, 1, QtCore.Qt.AlignmentFlag.AlignLeft)
 
     def _on_vector_changed(self, o, value):
         self._color = tuple(value)
@@ -95,11 +96,11 @@ class PropSlider(BaseProperty):
         self._init()
 
     def _init(self):
-        self._slider.setOrientation(QtCore.Qt.Horizontal)
-        self._slider.setTickPosition(QtWidgets.QSlider.TicksBelow)
-        self._slider.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
-                                   QtWidgets.QSizePolicy.Preferred)
-        self._spnbox.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
+        self._slider.setOrientation(QtCore.Qt.Orientation.Horizontal)
+        self._slider.setTickPosition(QtWidgets.QSlider.TickPosition.TicksBelow)
+        self._slider.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding,
+                                   QtWidgets.QSizePolicy.Policy.Preferred)
+        self._spnbox.setButtonSymbols(QtWidgets.QAbstractSpinBox.ButtonSymbols.NoButtons)
         layout = QtWidgets.QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self._spnbox)
@@ -232,7 +233,7 @@ class PropComboBox(QtWidgets.QComboBox):
 
     def set_value(self, value):
         if value != self.get_value():
-            idx = self.findText(value, QtCore.Qt.MatchExactly)
+            idx = self.findText(value, QtCore.Qt.MatchFlag.MatchExactly)
             self.setCurrentIndex(idx)
             if idx >= 0:
                 self.value_changed.emit(self.toolTip(), value)
@@ -264,7 +265,7 @@ class PropSpinBox(QtWidgets.QSpinBox):
 
     def __init__(self, parent=None):
         super(PropSpinBox, self).__init__(parent)
-        self.setButtonSymbols(self.NoButtons)
+        self.setButtonSymbols(QSpinBox.ButtonSymbols.NoButtons)
         self.valueChanged.connect(self._on_value_change)
 
     def _on_value_change(self, value):
@@ -283,7 +284,7 @@ class PropFilePath(BaseProperty):
     def __init__(self, parent=None):
         super(PropFilePath, self).__init__(parent)
         self._ledit = QtWidgets.QLineEdit()
-        self._ledit.setAlignment(QtCore.Qt.AlignLeft)
+        self._ledit.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
         self._ledit.editingFinished.connect(self._on_value_change)
         self._ledit.clearFocus()
 
@@ -444,7 +445,7 @@ class _ValueEdit(QtWidgets.QLineEdit):
         super(_ValueEdit, self).mouseMoveEvent(event)
 
     def mousePressEvent(self, event):
-        if event.button() == QtCore.Qt.MiddleButton:
+        if event.button() == QtCore.Qt.MouseButton.MiddleButton:
             self.mid_state = True
             self._reset()
             self.menu.exec_(QtGui.QCursor.pos())
@@ -492,17 +493,17 @@ class _Slider(QtWidgets.QSlider):
 
     def __init__(self, parent=None):
         super(_Slider, self).__init__(parent)
-        self.setOrientation(QtCore.Qt.Horizontal)
-        self.setTickPosition(QtWidgets.QSlider.TicksBelow)
-        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
-                           QtWidgets.QSizePolicy.Preferred)
+        self.setOrientation(QtCore.Qt.Orientation.Horizontal)
+        self.setTickPosition(QtWidgets.QSlider.TickPosition.TicksBelow)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding,
+                           QtWidgets.QSizePolicy.Policy.Preferred)
 
     def _update_value(self, x):
         value = (self.maximum() - self.minimum()) * x / self.width() + self.minimum()
         self.setValue(value)
 
     def mousePressEvent(self, event):
-        if event.button() == QtCore.Qt.LeftButton:
+        if event.button() == QtCore.Qt.MouseButton.LeftButton:
             self._update_value(event.pos().x())
         super(_Slider, self).mousePressEvent(event)
 
@@ -588,7 +589,7 @@ class _DoubleSpinBox(QtWidgets.QDoubleSpinBox):
 
     def __init__(self, parent=None):
         super(_DoubleSpinBox, self).__init__(parent)
-        self.setButtonSymbols(self.NoButtons)
+        self.setButtonSymbols(QtWidgets.QDoubleSpinBox.ButtonSymbols.NoButtons)
         self.setRange(-9999999999999999.0, 9999999999999999.0)
         self.setDecimals(16)
         self.setValue(0)
@@ -755,7 +756,7 @@ class PropWindow(QtWidgets.QWidget):
         self.__layout.setSpacing(6)
 
         layout = QtWidgets.QVBoxLayout(self)
-        layout.setAlignment(QtCore.Qt.AlignTop)
+        layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         layout.addLayout(self.__layout)
 
     def __repr__(self):
@@ -779,9 +780,9 @@ class PropWindow(QtWidgets.QWidget):
         if row > 0:
             row += 1
 
-        label_flags = QtCore.Qt.AlignCenter | QtCore.Qt.AlignRight
+        label_flags = QtCore.Qt.AlignmentFlag.AlignCenter | QtCore.Qt.AlignmentFlag.AlignRight
         if widget.__class__.__name__ == 'PropTextEdit':
-            label_flags = label_flags | QtCore.Qt.AlignTop
+            label_flags = label_flags | QtCore.Qt.AlignmentFlag.AlignTop
 
         self.__layout.addWidget(QtWidgets.QLabel(label), row, 0, label_flags)
         self.__layout.addWidget(widget, row, 1)
@@ -831,7 +832,7 @@ class NodePropWidget(QtWidgets.QWidget):
         self.name_wgt.value_changed.connect(self._on_property_changed)
 
         self.type_wgt = QtWidgets.QLabel(node.type_)
-        self.type_wgt.setAlignment(QtCore.Qt.AlignRight)
+        self.type_wgt.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
         self.type_wgt.setToolTip('type_')
         font = self.type_wgt.font()
         font.setPointSize(10)

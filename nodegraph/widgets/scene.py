@@ -128,7 +128,7 @@ class NodeScene(QtWidgets.QGraphicsScene):
         super().drawBackground(painter, rect)
 
         painter.save()
-        painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
+        painter.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing, True)
         painter.setBrush(self.backgroundBrush())
 
         if self._grid_mode is VIEWER_GRID_MODE_DOTS:
@@ -146,7 +146,7 @@ class NodeScene(QtWidgets.QGraphicsScene):
         super(NodeScene, self).mousePressEvent(event)
         keep_selection = any([
             event.button() == QtCore.Qt.MiddleButton,
-            event.button() == QtCore.Qt.RightButton,
+            event.button() == QtCore.Qt.MouseButton.RightButton,
             event.modifiers() == QtCore.Qt.AltModifier
         ])
         if keep_selection:

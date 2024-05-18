@@ -1,5 +1,6 @@
 
 from PySide6 import QtWidgets, QtCore, QtGui
+from PySide6.QtWidgets import QListView
 
 from nodegraph.constants import URN_SCHEME
 
@@ -45,8 +46,8 @@ class NodesTreeWidget(QtWidgets.QTreeWidget):
 
     def __init__(self, parent=None, node_graph=None):
         super(NodesTreeWidget, self).__init__(parent)
-        self.setDragDropMode(QtWidgets.QAbstractItemView.DragOnly)
-        self.setSelectionMode(self.ExtendedSelection)
+        self.setDragDropMode(QtWidgets.QAbstractItemView.DragDropMode.DragOnly)
+        self.setSelectionMode(QListView.SelectionMode.ExtendedSelection)
         self.setHeaderHidden(True)
         self.setWindowTitle('Nodes')
 
@@ -89,7 +90,7 @@ class NodesTreeWidget(QtWidgets.QTreeWidget):
                 label = '{}'.format(category)
             cat_item = BaseNodeTreeItem(self, [label], type=TYPE_CATEGORY)
             cat_item.setFirstColumnSpanned(True)
-            cat_item.setFlags(QtCore.Qt.ItemIsEnabled)
+            cat_item.setFlags(QtCore.Qt.ItemFlag.ItemIsEnabled)
             cat_item.setBackground(0, QtGui.QBrush(palette.midlight().color()))
             cat_item.setSizeHint(0, QtCore.QSize(100, 26))
             self.addTopLevelItem(cat_item)

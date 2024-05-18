@@ -14,8 +14,8 @@ class PropertiesDelegate(QtWidgets.QStyledItemDelegate):
             index (QtCore.QModelIndex):
         """
         painter.save()
-        painter.setRenderHint(QtGui.QPainter.Antialiasing, False)
-        painter.setPen(QtCore.Qt.NoPen)
+        painter.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing, False)
+        painter.setPen(QtCore.Qt.PenStyle.NoPen)
 
         # draw background.
         bg_clr = option.palette.midlight().color()
@@ -24,14 +24,14 @@ class PropertiesDelegate(QtWidgets.QStyledItemDelegate):
 
         # draw border.
         border_width = 1
-        if option.state & QtWidgets.QStyle.State_Selected:
+        if option.state & QtWidgets.QStyle.StateFlag.State_Selected:
             bdr_clr = option.palette.highlight().color()
             painter.setPen(QtGui.QPen(bdr_clr, 1.5))
         else:
             bdr_clr = option.palette.alternateBase().color()
             painter.setPen(QtGui.QPen(bdr_clr, 1))
 
-        painter.setBrush(QtCore.Qt.NoBrush)
+        painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
         painter.drawRect(QtCore.QRect(
             option.rect.x() + border_width,
             option.rect.y() + border_width,
@@ -52,10 +52,10 @@ class PropertiesList(QtWidgets.QTableWidget):
         self.horizontalHeader().hide()
 
         QtWidgets.QHeaderView.setSectionResizeMode(
-            self.verticalHeader(), QtWidgets.QHeaderView.ResizeToContents)
+            self.verticalHeader(), QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         QtWidgets.QHeaderView.setSectionResizeMode(
-            self.horizontalHeader(), 0, QtWidgets.QHeaderView.Stretch)
-        self.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+            self.horizontalHeader(), 0, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollMode.ScrollPerPixel)
 
     def wheelEvent(self, event):
         delta = event.pixelDelta() * 0.2
@@ -137,7 +137,7 @@ class PropertiesBinWidget(QtWidgets.QWidget):
         return '<{} object at {}>'.format(self.__class__.__name__, hex(id(self)))
 
     def __on_prop_close(self, node_id):
-        items = self._prop_list.findItems(node_id, QtCore.Qt.MatchExactly)
+        items = self._prop_list.findItems(node_id, QtCore.Qt.MatchFlag.MatchExactly)
         [self._prop_list.removeRow(i.row()) for i in items]
 
     def __on_limit_changed(self, value):
@@ -218,7 +218,7 @@ class PropertiesBinWidget(QtWidgets.QWidget):
         if rows >= self.limit():
             self._prop_list.removeRow(rows - 1)
 
-        itm_find = self._prop_list.findItems(node.id, QtCore.Qt.MatchExactly)
+        itm_find = self._prop_list.findItems(node.id, QtCore.Qt.MatchFlag.MatchExactly)
         if itm_find:
             self._prop_list.removeRow(itm_find[0].row())
 
@@ -269,7 +269,7 @@ class PropertiesBinWidget(QtWidgets.QWidget):
             NodePropWidget: node property widget.
         """
         node_id = node if isinstance(node, str) else node.id
-        itm_find = self._prop_list.findItems(node_id, QtCore.Qt.MatchExactly)
+        itm_find = self._prop_list.findItems(node_id, QtCore.Qt.MatchFlag.MatchExactly)
         if itm_find:
             item = itm_find[0]
             return self._prop_list.cellWidget(item.row(), 0)
