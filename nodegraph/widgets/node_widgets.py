@@ -1,5 +1,4 @@
-
-from PySide6 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets, QtGui
 
 from nodegraph.constants import VIEWER_FONT_COLOR, VIEWER_GRID_COLOR, Z_VAL_NODE_WIDGET
 from nodegraph.errors import NodeWidgetError
@@ -51,9 +50,9 @@ class _NodeGroupBox(QtWidgets.QGroupBox):
         elif align == 'right':
             style_dict['QGroupBox::title']['subcontrol-origin'] += 'top right'
             style_dict['QGroupBox::title']['margin-right'] = '3px'
-        
+
         stylesheet = ''
-        
+
         for css_class, css in style_dict.items():
             style = '{} {{\n'.format(css_class)
             for elm_name, elm_val in css.items():
@@ -334,11 +333,11 @@ class NodeLineEdit(NodeBaseWidget):
             'QLineEdit': {
                 'background': 'rgba({0},{1},{2},20)'.format(*bg_color),
                 'border': '1px solid rgb({0},{1},{2})'
-                          .format(*VIEWER_GRID_COLOR),
+                .format(*VIEWER_GRID_COLOR),
                 'border-radius': '3px',
                 'color': 'rgba({0},{1},{2},150)'.format(*text_color),
                 'selection-background-color': 'rgba({0},{1},{2},100)'
-                                              .format(*text_sel_color),
+                .format(*text_sel_color),
             }
         }
         stylesheet = ''
@@ -428,3 +427,51 @@ class NodeCheckBox(NodeBaseWidget):
         """
         if state != self.get_value():
             self.get_custom_widget().setChecked(state)
+
+
+class NodeImageLabel(NodeBaseWidget):
+    """
+    Displays as a ``QLabel/QPixmap`` in a node.
+
+    **Inherited from:** :class:`NodeBaseWidget`
+
+    .. note::
+        `To embed an Image in a node see func:`
+        :meth:`nodegraph.BaseNode.add_image_widget`
+    """
+
+    def __init__(self, parent=None, name="", label="", image_path=None):
+        super(NodeImageLabel, self).__init__(parent, name, label)
+        self.setZValue(Z_VAL_NODE_WIDGET + 0)
+        self.image_path = image_path
+        self.image = QtWidgets.QLabel()
+        self.set_value(image_path=image_path)
+
+    @property
+    def type_(self):
+        return "NodeImageWidget"
+
+    def get_value(self):
+        """
+        Returns the widget current text.
+
+        Returns:
+            str: current text.
+        """
+        return self.image_path
+
+    def set_value(self, image_path: str):
+        try:
+            pixmap = QtGui.QPixmap()
+            pixmap.load(image_path)
+            pixmap = pixmap.scaledToWidth(64)
+            self.image.setPixmap(pixmap)
+            self.image.setMinimumHeight(64)
+            self.image.clearFocus()
+            self.set_custom_widget(self.image)
+        except Exception as e:
+            print(f'ERROR: unable to create NodeImageWidget from "{image_path}", "{e}"')
+
+    def clear(self):
+        # combo_widget = self.get_custom_widget()
+        self.image.clear()

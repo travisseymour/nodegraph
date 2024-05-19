@@ -1,4 +1,3 @@
-
 import os
 import sys
 import signal
@@ -39,7 +38,8 @@ if __name__ == '__main__':
         group_node.MyGroupNode,
         widget_nodes.DropdownMenuNode,
         widget_nodes.TextInputNode,
-        widget_nodes.CheckboxNode
+        widget_nodes.CheckboxNode,
+        widget_nodes.ImageNode
     ])
 
     # show the node graph widget.
@@ -74,6 +74,11 @@ if __name__ == '__main__':
     # create node with the QComboBox widget.
     n_combo_menu = graph.create_node(
         'nodes.widget.DropdownMenuNode', name='combobox node')
+
+    # create node with the QLabel/QPixmap widget
+    n_image = graph.create_node(
+        'nodes.widget.ImageNode', name='image node'
+    )
 
     # create group node.
     n_group = graph.create_node('nodes.group.MyGroupNode')
@@ -110,10 +115,12 @@ if __name__ == '__main__':
     properties_bin = PropertiesBinWidget(node_graph=graph)
     properties_bin.setWindowFlags(QtCore.Qt.WindowType.Tool)
 
+
     # example show the node properties bin widget when a node is double-clicked.
     def display_properties_bin(node):
         if not properties_bin.isVisible():
             properties_bin.show()
+
 
     # wire function to "node_double_clicked" signal.
     graph.node_double_clicked.connect(display_properties_bin)

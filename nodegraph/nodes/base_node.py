@@ -1,23 +1,23 @@
-
 from collections import OrderedDict
+from pathlib import Path
 
 from nodegraph.base.node import NodeObject
 from nodegraph.base.port import Port
 from nodegraph.constants import (NODE_PROP_QLABEL,
-                                   NODE_PROP_QLINEEDIT,
-                                   NODE_PROP_QCOMBO,
-                                   NODE_PROP_QCHECKBOX,
-                                   IN_PORT, OUT_PORT,
-                                   NODE_LAYOUT_VERTICAL,
-                                   NODE_LAYOUT_HORIZONTAL)
+                                 NODE_PROP_QLINEEDIT,
+                                 NODE_PROP_QCOMBO,
+                                 NODE_PROP_QCHECKBOX,
+                                 IN_PORT, OUT_PORT,
+                                 NODE_LAYOUT_VERTICAL,
+                                 NODE_LAYOUT_HORIZONTAL)
 from nodegraph.errors import (PortError,
-                                PortRegistrationError,
-                                NodeWidgetError)
+                              PortRegistrationError,
+                              NodeWidgetError)
 from nodegraph.qgraphics.node_base import NodeItem, NodeItemVertical
 from nodegraph.widgets.node_widgets import (NodeBaseWidget,
-                                              NodeComboBox,
-                                              NodeLineEdit,
-                                              NodeCheckBox)
+                                            NodeComboBox,
+                                            NodeLineEdit,
+                                            NodeCheckBox, NodeImageLabel)
 
 
 class BaseNode(NodeObject):
@@ -179,6 +179,30 @@ class BaseNode(NodeObject):
             name, items[0], items=items, widget_type=NODE_PROP_QCOMBO, tab=tab)
 
         widget = NodeComboBox(self.view, name, label, items)
+        widget.value_changed.connect(lambda k, v: self.set_property(k, v))
+        self.view.add_widget(widget)
+
+    def add_image_label(self, name, label='', file_path='', tab=None):
+        """
+        Creates a custom property with the :meth:`NodeObject.create_property`
+        function and embeds a :class:`PySide6.QtWidgets.QLabel` widget
+        into the node.
+
+        Note:
+            The ``value_changed`` signal from the added node widget is wired
+            up to the :meth:`NodeObject.set_property` function.
+
+        Args:
+            name (str): name for the custom property.
+            label (str): label to be displayed.
+            file_path (str): image file path.
+            tab (str): name of the widget tab to display in.
+        """
+
+        self.create_property(
+            name, Path(file_path).name, widget_type=NODE_PROP_QLABEL, tab=tab)
+
+        widget = NodeImageLabel(self.view, name, label, image_path=file_path)
         widget.value_changed.connect(lambda k, v: self.set_property(k, v))
         self.view.add_widget(widget)
 
@@ -637,4 +661,3 @@ class BaseNode(NodeObject):
             out_port (nodegraph.Port): output port that was disconnected.
         """
         return
-

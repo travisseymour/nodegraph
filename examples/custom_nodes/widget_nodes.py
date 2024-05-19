@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from nodegraph import BaseNode
 
 
@@ -27,6 +29,39 @@ class DropdownMenuNode(BaseNode):
             'Menu Test',
             items=items,
             # tooltip='example custom tooltip'
+        )
+
+
+class ImageNode(BaseNode):
+    """
+    A node class with 1 inputs and 4 outputs.
+    Also has an image presented in a QLabel/QPixmap
+    """
+
+    # unique node identifier.
+    __identifier__ = "nodes.widget"
+
+    # initial default node name.
+    NODE_NAME = "image"
+
+    def __init__(self):
+        super(ImageNode, self).__init__()
+
+        # create node inputs.
+        self.add_input("input")
+
+        # create node outputs.
+        self.add_output("North")
+        self.add_output("South")
+        self.add_output("East")
+        self.add_output("West")
+
+        # create the QLabel/QPixmap widget
+        img = Path(Path(__file__).parent.parent, 'star.png')
+        self.add_image_label(
+            'my_image',
+            'star.png',
+            file_path=str(img)
         )
 
 
