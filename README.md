@@ -18,3 +18,6 @@ This a port of the [NodeGraphQt](https://github.com/jchanvfx/NodeGraphQt) framew
 
 [Qt for Python](https://doc.qt.io/qtforpython/) by Qt Company
 
+## Screenshot
+
+[![Screenshot](docs/_images/screenshot.png)](docs/_images/screenshot.png)
